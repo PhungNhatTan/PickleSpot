@@ -1,0 +1,28 @@
+{
+  "name": "your-project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "server": "nodemon server/index.js",
+    "client": "npm run dev --prefix client",
+    "build-client": "npm run build --prefix client",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "install-all": "npm install && cd client && npm install && cd ../server && npm install",
+    "lint": "eslint . --config eslint.config.js",
+    "lint:client": "eslint client --config eslint.config.js",
+    "lint:server": "eslint server --config eslint.config.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@eslint/js": "^9.33.0",
+    "concurrently": "^9.2.0",
+    "eslint": "^9.33.0",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "globals": "^16.3.0",
+    "nodemon": "^3.1.10"
+  }
+}
