@@ -1,43 +1,73 @@
+# ------------------------------
 # Node.js
+# ------------------------------
 node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
-# Environment variables
+# Build output
+dist/
+build/
+
+# Environment files
 .env
-.env.*        # all env files (frontend/backend)
-!.env.example # but keep example env files
+.env.*       # For different environments like .env.development, .env.production
+!.env.example  # Keep example env file
+
+# Prisma
+prisma/dev.db
+prisma/dev.db-journal
+prisma/migrations/*/dev.db
+prisma/migrations/*/dev.db-journal
+
+# Local database files
+*.db
+*.db-journal
 
 # Logs
 logs
 *.log
-*.out
-*.pid
-*.seed
-*.pid.lock
+*.log.*
 
-# Vercel
-.vercel/
-
-# Build output
-dist/
-build/
-.next/
-out/
-coverage/
-
-# Frontend (React, Vite, Next.js)
-client/node_modules/
-client/dist/
-client/build/
-
-# Backend
-server/node_modules/
-server/dist/
-server/build/
-
-# Mac / Linux / Windows system files
+# OS generated files
 .DS_Store
 Thumbs.db
+
+# Editor settings
+.vscode/
+.idea/
+*.swp
+
+# Coverage and testing
+coverage/
+.nyc_output/
+jest-html-reporters-*
+
+# Cache
+.cache/
+tmp/
+temp/
+
+# ------------------------------
+# React specific
+# ------------------------------
+client/node_modules/
+client/.env
+client/.env.*    # Frontend environment files
+client/.cache/
+client/build/
+client/dist/
+
+# ------------------------------
+# Vercel
+# ------------------------------
+.vercel/
+
+# ------------------------------
+# Misc
+# ------------------------------
+*.local
+*.pid
+*.seed
