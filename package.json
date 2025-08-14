@@ -11,6 +11,7 @@
     "lint": "eslint . --config eslint.config.js",
     "lint:client": "eslint client --config eslint.config.js",
     "lint:server": "eslint server --config eslint.config.js",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
     "start": "npm run build-client && NODE_ENV=production node server/index.js"
   },
   "keywords": [],
