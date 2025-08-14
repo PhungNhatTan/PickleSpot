@@ -83,7 +83,8 @@ npm run dev
 npm run server
 npm run client
 
-# Build
+# Production
+npm start
 npm run build-client
 
 # Code quality
