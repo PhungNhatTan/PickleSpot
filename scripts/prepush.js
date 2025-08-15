@@ -52,7 +52,13 @@ import dotenv from 'dotenv';
     console.log('✅ Render build simulation PASSED!');
 
     // Clean up temp folder
-    await fs.remove(tempDir);
+    // After all builds complete
+    await new Promise(resolve => setTimeout(resolve, 500));
+    try {
+      await fs.remove(tempDir);
+    } catch (err) {
+      console.warn('⚠️ Could not remove temp folder, leaving it for manual cleanup:', tempDir);
+    }
   } catch (err) {
     console.error('❌ Pre-push build simulation failed:', err);
     process.exit(1);
