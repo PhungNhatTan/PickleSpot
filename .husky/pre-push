@@ -1,0 +1,44 @@
+#!/bin/sh
+set -e
+
+echo "🧪 Simulating Render production build in a temp folder..."
+
+# Temp folder
+TEMP_DIR=$(node -e "const fs=require('fs'); const os=require('os'); const path=require('path'); console.log(fs.mkdtempSync(path.join(os.tmpdir(), 'render-build-')))")
+echo "Temp dir: $TEMP_DIR"
+
+# Copy project files
+node -e "
+const fs = require('fs-extra');
+const path = require('path');
+fs.copySync('.', '$TEMP_DIR', {
+  filter: src => !src.includes('node_modules') && !src.includes('.git') && !src.includes('.husky')
+});
+"
+
+cd "$TEMP_DIR"
+
+# Load env vars if present
+if [ -f .env.production ]; then
+  export $(grep -v '^#' .env.production | xargs)
+fi
+
+# Root install
+npm ci
+
+# Build client directly
+cd client
+npm ci
+npm run build
+cd ..
+
+# Install server dependencies
+cd server
+npm ci
+cd ..
+
+# Optional: server check (replace with safe check if needed)
+echo "🛠 Server dependencies installed. Server check skipped on Windows."
+
+echo "✅ Render build simulation passed!"
+rm -rf "$TEMP_DIR"
