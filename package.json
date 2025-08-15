@@ -6,6 +6,11 @@
   "engines": {
     "node": "11.x"
   },
+  "private": true,
+  "workspaces": [
+    "client",
+    "server"
+  ],
   "scripts": {
     "server": "nodemon server/index.js",
     "client": "npm run dev --prefix client",
