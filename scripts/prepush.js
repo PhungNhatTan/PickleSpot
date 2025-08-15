@@ -1,7 +1,3 @@
-/* eslint-env node */
-/* eslint-disable no-console */
-
-
 import fs from 'fs-extra';
 import path from 'path';
 import os from 'os';
@@ -15,12 +11,14 @@ import dotenv from 'dotenv';
     const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'render-build-'));
     console.log('Temp dir:', tempDir);
 
+    // Copy project files
     await fs.copy(process.cwd(), tempDir, {
       filter: src => !src.includes('node_modules') && !src.includes('.git') && !src.includes('.husky'),
     });
 
     process.chdir(tempDir);
 
+    // Load env
     const dotenvPath = path.join(tempDir, '.env.production');
     if (fs.existsSync(dotenvPath)) {
       dotenv.config({ path: dotenvPath });
@@ -30,13 +28,15 @@ import dotenv from 'dotenv';
     console.log('📦 Installing root dependencies...');
     execSync('npm ci', { stdio: 'inherit', shell: true });
 
-    console.log('🏗 Building client...');
-    execSync('cd client && npm ci && npm run build', { stdio: 'inherit', shell: true });
+    // Build client safely
+    const clientDir = path.join(tempDir, 'client');
+    execSync('npm ci', { cwd: clientDir, stdio: 'inherit', shell: true });
+    execSync('npm run build', { cwd: clientDir, stdio: 'inherit', shell: true });
 
-    console.log('📦 Installing server dependencies...');
-    execSync('cd server && npm ci', { stdio: 'inherit', shell: true });
+    // Install server dependencies
+    const serverDir = path.join(tempDir, 'server');
+    execSync('npm ci', { cwd: serverDir, stdio: 'inherit', shell: true });
 
-    console.log('🛠 Server startup check skipped (Windows safe)');
     console.log('✅ Render build simulation PASSED!');
 
     await fs.remove(tempDir);
