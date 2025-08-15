@@ -8,6 +8,20 @@ export default [
     js.configs.recommended,
 
     {
+        "env": {
+            "node": true,
+            "es2021": true
+        },
+        "extends": [
+            "eslint:recommended"
+        ],
+        "rules": {
+            "no-console": "off"
+        }
+    },
+
+
+    {
         ignores: [
             'node_modules',
             'client/.dist',
@@ -16,7 +30,7 @@ export default [
             '.vercel'
         ],
     },
-    
+
     // Common settings for all files
     {
         files: ["**/*.{js,jsx,ts,tsx}"],
