@@ -17,10 +17,10 @@ build/
 !.env.example  # Keep example env file
 
 # Prisma
-prisma/dev.db
-prisma/dev.db-journal
-prisma/migrations/*/dev.db
-prisma/migrations/*/dev.db-journal
+server/src/generated/prisma/**
+!server/src/generated/prisma/schema.prisma
+!server/src/generated/prisma/migrations/
+!server/src/generated/prisma/migrations/**
 
 # Local database files
 *.db
@@ -60,10 +60,6 @@ client/.cache/
 client/build/
 client/dist/
 
-# ------------------------------
-# Vercel
-# ------------------------------
-.vercel/
 
 # ------------------------------
 # Misc
