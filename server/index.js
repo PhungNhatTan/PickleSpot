@@ -1,16 +1,16 @@
 // server/index.js
 require('dotenv').config();
-const express = require('express');
-const cors = require('cors');
-const jwt = require('jsonwebtoken');
-
+import express from 'express';
+import cors from 'cors';
+import jwt from 'jsonwebtoken'
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-console.log('BOOT from', __filename);
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+console.log("BOOT from", __filename);
+console.log("DIR is", __dirname);
 
 const app = express();
 app.use(cors());
@@ -53,26 +53,26 @@ app.get('/health', (_req, res) => res.json({ ok: true }));
 app.post('/api/auth/login', (req, res) => {
   const { username, password } = req.body || {};
   const u = USERS[username];
-  if (!u || u.password !== password) {return res.status(401).json({ error: 'Invalid credentials' })};
+  if (!u || u.password !== password) { return res.status(401).json({ error: 'Invalid credentials' }) };
   const token = signToken(username, u.role);
   res.json({ token, tokenType: 'Bearer' });
 });
 
 app.post('/api/auth/logout', (req, res) => {
   const auth = req.headers.authorization || '';
-  if (!auth.startsWith('Bearer ')) {return res.status(400).json({ error: 'Missing Authorization: Bearer <token>' })};
+  if (!auth.startsWith('Bearer ')) { return res.status(400).json({ error: 'Missing Authorization: Bearer <token>' }) };
   const token = auth.slice(7).trim();
   const dec = decode(token);
-  if (!dec?.exp) {return res.status(400).json({ error: 'Invalid token' })};
+  if (!dec?.exp) { return res.status(400).json({ error: 'Invalid token' }) };
   blacklist.set(token, dec.exp);
   res.json({ message: 'Logged out (token invalidated until expiry).' });
 });
 
 app.get('/api/auth/hello', (req, res) => {
   const auth = req.headers.authorization || '';
-  if (!auth.startsWith('Bearer ')) {return res.status(401).json({ error: 'Missing Authorization: Bearer <token>' })};
+  if (!auth.startsWith('Bearer ')) { return res.status(401).json({ error: 'Missing Authorization: Bearer <token>' }) };
   const token = auth.slice(7).trim();
-  if (isBlacklisted(token)) {return res.status(401).json({ error: 'Token is blacklisted (logged out).' })};
+  if (isBlacklisted(token)) { return res.status(401).json({ error: 'Token is blacklisted (logged out).' }) };
   try {
     const user = verify(token);
     res.json({ message: `Hello, ${user.sub}!`, role: user.role });

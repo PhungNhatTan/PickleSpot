@@ -21,8 +21,8 @@
     "lint:client": "npx eslint client --config eslint.config.js",
     "lint:server": "npx eslint server --config eslint.config.js",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "start": "npm run build-client && cross-env NODE_ENV=production node server/index.js",
-    "start-no-build": "NODE_OPTIONS='--env-file=.env.production' node server/index.js",
+    "start": "npm run build-client && node -e \"process.env.NODE_ENV='production'; require('./server/index.js')\"",
+    "start-no-build": "node -e \"process.env.NODE_ENV='production'; require('./server/index.js')\"",
     "prepare": "npx husky"
   },
   "keywords": [],
@@ -31,7 +31,6 @@
   "devDependencies": {
     "@eslint/js": "^9.33.0",
     "concurrently": "^9.2.0",
-    "cross-env": "^10.0.0",
     "dotenv": "^17.2.1",
     "eslint": "^9.33.0",
     "eslint-plugin-react": "^7.37.5",
