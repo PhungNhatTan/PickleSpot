@@ -1,30 +1,25 @@
-const express = require("express");
-const path = require("path");
-const cors = require("cors");
+import express from "express";
+import path from "path";
+import { fileURLToPath } from "url";
+import app from "./src/app.js";
+import { PORT } from "./src/config/server.js";
 
-const PORT = process.env.PORT || 5000;
-const app = express();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-app.use(cors({
-  origin: process.env.CORS_ORIGIN || '*'
-}));
+console.log("BOOT from", __filename);
+console.log("DIR is", __dirname);
 
-app.get("/api/message", (req, res) => {
-    res.send("Welcome to the node server");
-});
-
+// Serve frontend in production
 if (process.env.NODE_ENV === "production") {
-  // Serve static files from client/dist in production
-  app.use(express.static(path.join(__dirname, "../client/dist")));
+  const clientBuildPath = path.join(__dirname, "../client/dist"); // vite default build path
+  app.use(express.static(clientBuildPath));
 
-  // Serve index.html for any unknown routes
-  app.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname, "../client/dist/index.html"));
+  app.get("*", (_req, res) => {
+    res.sendFile(path.join(clientBuildPath, "index.html"));
   });
-} else {
-  console.log("⚡ Development mode: not serving dist folder");
 }
 
 app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
+  console.log(`🚀 Server running at http://localhost:${PORT}`);
 });
