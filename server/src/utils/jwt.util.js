@@ -9,19 +9,19 @@ const TOKEN_TTL_SEC = Number(process.env.JWT_TTL || 3600);
 const blacklist = new Map();
 function isBlacklisted(t) {
   const exp = blacklist.get(t);
-  if (!exp) return false;
+  if (!exp) {return false};
   const now = Math.floor(Date.now() / 1000);
   if (exp <= now) { blacklist.delete(t); return false; }
   return true;
 }
 setInterval(() => {
   const now = Math.floor(Date.now() / 1000);
-  for (const [t, exp] of blacklist) if (exp <= now) blacklist.delete(t);
+  for (const [t, exp] of blacklist) {if (exp <= now) {blacklist.delete(t)}};
 }, 60_000);
 
 const signToken = (sub, role, extra = {}) => jwt.sign({ sub, role, ...extra }, JWT_SECRET, { expiresIn: TOKEN_TTL_SEC });
 const verify = (t) => jwt.verify(t, JWT_SECRET);
 const decode = (t) => jwt.decode(t);
-function revokeUntilExpiry(t) { const d = decode(t); if (!d?.exp) throw new Error('Invalid token'); blacklist.set(t, d.exp); }
+function revokeUntilExpiry(t) { const d = decode(t); if (!d?.exp) {throw new Error('Invalid token')}; blacklist.set(t, d.exp); }
 
 module.exports = { signToken, verify, decode, revokeUntilExpiry, isBlacklisted };

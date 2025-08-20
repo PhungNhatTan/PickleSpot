@@ -1,8 +1,10 @@
+/* eslint-disable no-undef */
 import fs from 'fs-extra';
 import path from 'path';
 import os from 'os';
 import { execSync } from 'child_process';
 import dotenv from 'dotenv';
+
 
 (async () => {
   try {

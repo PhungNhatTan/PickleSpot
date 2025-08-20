@@ -13,7 +13,7 @@ const USERS = {
 router.post('/login', (req, res) => {
   const { username, password } = req.body || {};
   const u = USERS[username];
-  if (!u || u.password !== password) return res.status(401).json({ error: 'Invalid credentials' });
+  if (!u || u.password !== password) {return res.status(401).json({ error: 'Invalid credentials' })};
 
   const token = signToken(username, u.role);
   res.json({ token, tokenType: 'Bearer' });
@@ -22,7 +22,7 @@ router.post('/login', (req, res) => {
 // POST /api/auth/logout -> blacklist token tới khi hết hạn
 router.post('/logout', (req, res) => {
   const auth = req.headers.authorization || '';
-  if (!auth.startsWith('Bearer ')) return res.status(400).json({ error: 'Missing Authorization: Bearer <token>' });
+  if (!auth.startsWith('Bearer ')) {return res.status(400).json({ error: 'Missing Authorization: Bearer <token>' })};
 
   const token = auth.slice(7).trim();
   try { revokeUntilExpiry(token); res.json({ message: 'Logged out (token invalidated until expiry).' }); }

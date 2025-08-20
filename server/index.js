@@ -4,7 +4,13 @@ const express = require('express');
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
 
-console.log('BOOT from', __filename);        // <-- giúp bạn nhìn đúng file đang chạy
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+console.log('BOOT from', __filename);
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 app.use(cors());
@@ -18,27 +24,27 @@ const TOKEN_TTL_SEC = Number(process.env.JWT_TTL || 3600);
 
 // demo users
 const USERS = {
-  user:  { password: 'password',  role: 'USER'  },
-  admin: { password: 'admin123',  role: 'ADMIN' }
+  user: { password: 'password', role: 'USER' },
+  admin: { password: 'admin123', role: 'ADMIN' }
 };
 
 // blacklist in-memory: token -> exp
 const blacklist = new Map();
 const isBlacklisted = (t) => {
   const exp = blacklist.get(t);
-  if (!exp) return false;
-  const now = Math.floor(Date.now()/1000);
+  if (!exp) { return false };
+  const now = Math.floor(Date.now() / 1000);
   if (exp <= now) { blacklist.delete(t); return false; }
   return true;
 };
 setInterval(() => {
-  const now = Math.floor(Date.now()/1000);
-  for (const [t, exp] of blacklist) if (exp <= now) blacklist.delete(t);
+  const now = Math.floor(Date.now() / 1000);
+  for (const [t, exp] of blacklist) { if (exp <= now) { blacklist.delete(t) } };
 }, 60_000);
 
 const signToken = (sub, role) => jwt.sign({ sub, role }, JWT_SECRET, { expiresIn: TOKEN_TTL_SEC });
 const verify = (t) => jwt.verify(t, JWT_SECRET);
-const decode  = (t) => jwt.decode(t);
+const decode = (t) => jwt.decode(t);
 
 // healthcheck
 app.get('/health', (_req, res) => res.json({ ok: true }));
@@ -47,26 +53,26 @@ app.get('/health', (_req, res) => res.json({ ok: true }));
 app.post('/api/auth/login', (req, res) => {
   const { username, password } = req.body || {};
   const u = USERS[username];
-  if (!u || u.password !== password) return res.status(401).json({ error: 'Invalid credentials' });
+  if (!u || u.password !== password) {return res.status(401).json({ error: 'Invalid credentials' })};
   const token = signToken(username, u.role);
   res.json({ token, tokenType: 'Bearer' });
 });
 
 app.post('/api/auth/logout', (req, res) => {
   const auth = req.headers.authorization || '';
-  if (!auth.startsWith('Bearer ')) return res.status(400).json({ error: 'Missing Authorization: Bearer <token>' });
+  if (!auth.startsWith('Bearer ')) {return res.status(400).json({ error: 'Missing Authorization: Bearer <token>' })};
   const token = auth.slice(7).trim();
   const dec = decode(token);
-  if (!dec?.exp) return res.status(400).json({ error: 'Invalid token' });
+  if (!dec?.exp) {return res.status(400).json({ error: 'Invalid token' })};
   blacklist.set(token, dec.exp);
   res.json({ message: 'Logged out (token invalidated until expiry).' });
 });
 
 app.get('/api/auth/hello', (req, res) => {
   const auth = req.headers.authorization || '';
-  if (!auth.startsWith('Bearer ')) return res.status(401).json({ error: 'Missing Authorization: Bearer <token>' });
+  if (!auth.startsWith('Bearer ')) {return res.status(401).json({ error: 'Missing Authorization: Bearer <token>' })};
   const token = auth.slice(7).trim();
-  if (isBlacklisted(token)) return res.status(401).json({ error: 'Token is blacklisted (logged out).' });
+  if (isBlacklisted(token)) {return res.status(401).json({ error: 'Token is blacklisted (logged out).' })};
   try {
     const user = verify(token);
     res.json({ message: `Hello, ${user.sub}!`, role: user.role });
@@ -74,5 +80,14 @@ app.get('/api/auth/hello', (req, res) => {
     res.status(401).json({ error: 'Invalid or expired token' });
   }
 });
+
+if (process.env.NODE_ENV === 'production') {
+  const clientBuildPath = path.join(__dirname, '../client/dist'); // vite default is dist
+  app.use(express.static(clientBuildPath));
+
+  app.get('*', (_req, res) => {
+    res.sendFile(path.join(clientBuildPath, 'index.html'));
+  });
+}
 
 app.listen(PORT, () => console.log(`Server is running on http://localhost:${PORT}`));

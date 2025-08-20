@@ -10,8 +10,8 @@ export default function TestAuth() {
   const [log, setLog] = useState("");
 
   useEffect(() => {
-    if (token) localStorage.setItem("token", token);
-    else localStorage.removeItem("token");
+    if (token) {localStorage.setItem("token", token);}
+    else {localStorage.removeItem("token")};
   }, [token]);
 
   const api = (p) => (base ? `${base}${p}` : p);
@@ -25,7 +25,7 @@ export default function TestAuth() {
         body: JSON.stringify({ username, password }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data?.error || res.statusText);
+      if (!res.ok) {throw new Error(data?.error || res.statusText);}
       setToken(data.token);
       setLog("Login OK");
     } catch (e) { setLog("Login FAIL: " + e.message); }
@@ -38,7 +38,7 @@ export default function TestAuth() {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data?.error || res.statusText);
+      if (!res.ok) {throw new Error(data?.error || res.statusText);}
       setHello(JSON.stringify(data, null, 2));
       setLog("Hello OK");
     } catch (e) { setHello(""); setLog("Hello FAIL: " + e.message); }
@@ -52,7 +52,7 @@ export default function TestAuth() {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data?.error || res.statusText);
+      if (!res.ok) {throw new Error(data?.error || res.statusText);}
       setLog("Logout OK");
     } catch (e) { setLog("Logout FAIL: " + e.message); }
     finally { setToken(""); setHello(""); }
