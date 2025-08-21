@@ -15,36 +15,228 @@ datasource db {
 }
 
 model Account {
-  Id  Int @id @default(autoincrement())
-  UserName String @unique
-  Password String
-  Email String? @unique
+  Id          Int     @id @default(autoincrement())
+  UserName    String  @unique
+  Password    String                                  // use hash
+  Email       String? @unique
   DisplayName String?
-  Role Role @default(User)
-  Admin Admin?
+  Role        Role    @default(User)
+
+  // many-one relationship
+  Admin      Admin?
   CourtOwner CourtOwner?
+
+  // many-many or one-many relationship
+  Booking     CourtBooking[]
+  Payment     Payment[]
+  CourtRating CourtRating[]
+
+  // active condition
+  DisabledAt DateTime? //assign a date to disable
 }
 
 model Admin {
-  Id Int @id
+  // one-one relation as key
+  Id      Int     @id
   Account Account @relation(fields: [Id], references: [Id])
 }
 
 model CourtOwner {
-  Id Int @id
+  // one-one relation as key
+  Id      Int     @id
   Account Account @relation(fields: [Id], references: [Id])
-  Court Court[]
+
+  // many-many or one-many relationship
+  CourtGroup CourtGroup[]
+
+  // active condition
+  DisabledAt DateTime? //assign a date to disable
 }
 
+//Specific court
 model Court {
+  Id    Int    @id @default(autoincrement())
+  Name  String
+  Price Float
+
+  //additional attributes
+  Covered Boolean @default(false)   // default no-cover
+  IsIndoor Boolean @default(true)   // default indoor
+  DurationUnit Int @default(30)     // base unit minute default 30mins
+  Capacity Int @default(2)          // amount of player per court, default 2
+
+  //many-one relationship
+  GroupId Int
+  Group   CourtGroup @relation(fields: [GroupId], references: [Id])
+
+  //many-many or one-many relationship
+  Booking CourtBooking[]
+  CourtRating CourtRating[]
+  Photo CourtPhoto[]
+  Type    CourtType[] @relation("CourtToType")
+
+  //active condition
+  DisabledAt  DateTime? //assign a date to disable
+}
+
+model CourtPhoto{
+  // type
   Id Int @id @default(autoincrement())
-  Name String
+
+  // value
+  Url       String
+
+  // many-one relation
+  CourtId   Int
+  Court     Court @relation(fields: [CourtId], references: [Id])
+}
+
+model CourtType {
+  Id    Int     @id @default(autoincrement())
+  Name  String
+  Court Court[] @relation("CourtToType")
+}
+
+model CourtRating {
+  // key
+  Id      Int   @id @default(autoincrement())
+
+  // values
+  Score     Int
+  Comment   String?
+  CreatedAt DateTime @default(now())
+  UpdatedAt DateTime @updatedAt
+
+  // many-one relationship
+  CourtId Int
+  Court   Court @relation(fields: [CourtId], references: [Id])
+
+  AccountId Int
+  Account   Account @relation(fields: [AccountId], references: [Id])
+
+  // unique constrain
+  @@unique([CourtId, AccountId]) // user can rate a court only once
+}
+
+//Group of court in same address
+model CourtGroup {
+  // key
+  Id        Int    @id @default(autoincrement())
+
+  // values
+  Name      String
+  OwnerId   Int
+  Address   String
+  Latitude  Float
+  Longitude Float
+  Description String?      
+
+  // many-one relationship
   Owner CourtOwner @relation(fields: [OwnerId], references: [Id])
-  OwnerId Int
+
+  //many-many or one-many relationship
+  Court Court[]
+  CourtGroupService CourtGroupService[]
+
+  //active condition
+  DisabledAt DateTime? //assign a date to disable
+}
+
+model Service {
+  // key
+  Id Int @id @default(autoincrement())
+
+  // values
+  Name String
+
+  // many-many or one-many relationship
+  CourtGroupService CourtGroupService[]
+}
+
+model CourtGroupService {
+  Id          Int        @id @default(autoincrement())
+  GroupId     Int
+  ServiceId   Int
+  Price       Float?     // optional, if some services are paid
+  IsAvailable Boolean    @default(true)
+
+  CourtGroup CourtGroup @relation(fields: [GroupId], references: [Id])
+  Service    Service    @relation(fields: [ServiceId], references: [Id])
+
+  @@unique([GroupId, ServiceId])
+}
+
+model CourtBooking {
+  // key
+  Id            Int      @id @default(autoincrement())
+
+  // value
+  RecordDate    DateTime //time the entry was created
+  BookStartTime DateTime //time booking start
+  BookEndTime   DateTime //time booking end
+
+  BookedPrice   Float
+  TotalPrice Float
+  
+  Status BookingStatus @default(Pending)
+
+  // many-one relationship
+  CourtId   Int
+  BookCourt Court @relation(fields: [CourtId], references: [Id])
+
+  AccountId Int
+  Account   Account @relation(fields: [AccountId], references: [Id])
+
+  // many-many or one-many relationship
+  Payment Payment[]
+
+  //active condition
+  DisabledAt DateTime? //assign a date to disable
+}
+
+model Payment {
+  Id        Int           @id @default(autoincrement())
+  Amount    Float
+  Currency  String        @default("USD")
+  Method    PaymentMethod
+  Status    PaymentStatus @default(Pending)
+  PaidAt    DateTime?
+  CreatedAt DateTime      @default(now())
+
+  // many-one relationship
+  BookingId Int
+  Booking   CourtBooking @relation(fields: [BookingId], references: [Id])
+
+  AccountId Int
+  Account   Account @relation(fields: [AccountId], references: [Id])
+
+  //active condition
+  DisabledAt DateTime?
 }
 
 enum Role {
   User
   Admin
   CourtOwner
+}
+
+enum PaymentMethod {
+  Cash
+  Card
+  BankTransfer
+  OnlineGateway
+}
+
+enum PaymentStatus {
+  Pending
+  Completed
+  Failed
+  Refunded
+}
+
+enum BookingStatus{
+  Pending
+  Confirmed
+  Cancelled
+  Completed
 }

@@ -6,7 +6,7 @@ const blacklist = new Map();
 
 function isBlacklisted(token) {
   const exp = blacklist.get(token);
-  if (!exp) return false;
+  if (!exp) {return false};
   const now = Math.floor(Date.now() / 1000);
   if (exp <= now) { blacklist.delete(token); return false; }
   return true;
@@ -16,7 +16,7 @@ function isBlacklisted(token) {
 setInterval(() => {
   const now = Math.floor(Date.now() / 1000);
   for (const [t, exp] of blacklist) {
-    if (exp <= now) blacklist.delete(t);
+    if (exp <= now) {blacklist.delete(t)};
   }
 }, 60_000);
 

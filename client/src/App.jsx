@@ -1,36 +1,22 @@
 // client/src/App.jsx
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { BrowserRouter, Routes, Route } from "react-router-dom"
+import SearchPage from "./pages/searchPage.jsx"
+import CourtDetailPage from "./pages/courtDetailPage.jsx"
 import './App.css'
-import TestAuth from './TestAuth'   // <-- import ở đầu
+import TestAuth from './TestAuth'
 
 function App() {
   const [count, setCount] = useState(0)
 
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank" rel="noreferrer">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank" rel="noreferrer">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((c) => c + 1)}>
-          count is {count}
-        </button>
-        <p>Edit <code>src/App.jsx</code> and save to test HMR</p>
-      </div>
-      <p className="read-the-docs">Click on the Vite and React logos to learn more</p>
-
-      <hr style={{ margin: '2rem 0' }} />
-
-      {/* Tester đăng nhập JWT */}
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<SearchPage />} />
+          <Route path="/courts/:id" element={<CourtDetailPage />} />
+        </Routes>
+      </BrowserRouter>
       <TestAuth />
     </>
   )
