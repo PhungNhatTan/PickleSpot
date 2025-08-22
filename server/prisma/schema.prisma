@@ -6,7 +6,7 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../src/generated/prisma"
+  output   = "../node_modules/@prisma/client"
 }
 
 datasource db {
@@ -15,31 +15,31 @@ datasource db {
 }
 
 model Account {
-  Id  Int @id @default(autoincrement())
-  UserName String @unique
-  Password String
-  Email String? @unique
+  Id          Int         @id @default(autoincrement())
+  UserName    String      @unique
+  Password    String
+  Email       String?     @unique
   DisplayName String?
-  Role Role @default(User)
-  Admin Admin?
-  CourtOwner CourtOwner?
+  Role        Role        @default(User)
+  Admin       Admin?
+  CourtOwner  CourtOwner?
 }
 
 model Admin {
-  Id Int @id
+  Id      Int     @id
   Account Account @relation(fields: [Id], references: [Id])
 }
 
 model CourtOwner {
-  Id Int @id
+  Id      Int     @id
   Account Account @relation(fields: [Id], references: [Id])
-  Court Court[]
+  Court   Court[]
 }
 
 model Court {
-  Id Int @id @default(autoincrement())
-  Name String
-  Owner CourtOwner @relation(fields: [OwnerId], references: [Id])
+  Id      Int        @id @default(autoincrement())
+  Name    String
+  Owner   CourtOwner @relation(fields: [OwnerId], references: [Id])
   OwnerId Int
 }
 
