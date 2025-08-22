@@ -1,4 +1,4 @@
-import AccountModel from "../models/AccountModel.js";
+import AccountModel from "../models/account/accountModel.js";
 
 export async function getAccounts(req, res) {
   try {
