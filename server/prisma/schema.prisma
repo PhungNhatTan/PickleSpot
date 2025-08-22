@@ -6,7 +6,7 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../src/generated/prisma"
+  output   = "../node_modules/@prisma/client"
 }
 
 datasource db {
@@ -17,7 +17,7 @@ datasource db {
 model Account {
   Id          Int     @id @default(autoincrement())
   UserName    String  @unique
-  Password    String                                  // use hash
+  Password    String // use hash
   Email       String? @unique
   DisplayName String?
   Role        Role    @default(User)
@@ -60,35 +60,35 @@ model Court {
   Price Float
 
   //additional attributes
-  Covered Boolean @default(false)   // default no-cover
-  IsIndoor Boolean @default(true)   // default indoor
-  DurationUnit Int @default(30)     // base unit minute default 30mins
-  Capacity Int @default(2)          // amount of player per court, default 2
+  Covered      Boolean @default(false) // default no-cover
+  IsIndoor     Boolean @default(true) // default indoor
+  DurationUnit Int     @default(30) // base unit minute default 30mins
+  Capacity     Int     @default(2) // amount of player per court, default 2
 
   //many-one relationship
   GroupId Int
   Group   CourtGroup @relation(fields: [GroupId], references: [Id])
 
   //many-many or one-many relationship
-  Booking CourtBooking[]
+  Booking     CourtBooking[]
   CourtRating CourtRating[]
-  Photo CourtPhoto[]
-  Type    CourtType[] @relation("CourtToType")
+  Photo       CourtPhoto[]
+  Type        CourtType[]    @relation("CourtToType")
 
   //active condition
-  DisabledAt  DateTime? //assign a date to disable
+  DisabledAt DateTime? //assign a date to disable
 }
 
-model CourtPhoto{
+model CourtPhoto {
   // type
   Id Int @id @default(autoincrement())
 
   // value
-  Url       String
+  Url String
 
   // many-one relation
-  CourtId   Int
-  Court     Court @relation(fields: [CourtId], references: [Id])
+  CourtId Int
+  Court   Court @relation(fields: [CourtId], references: [Id])
 }
 
 model CourtType {
@@ -99,7 +99,7 @@ model CourtType {
 
 model CourtRating {
   // key
-  Id      Int   @id @default(autoincrement())
+  Id Int @id @default(autoincrement())
 
   // values
   Score     Int
@@ -121,21 +121,21 @@ model CourtRating {
 //Group of court in same address
 model CourtGroup {
   // key
-  Id        Int    @id @default(autoincrement())
+  Id Int @id @default(autoincrement())
 
   // values
-  Name      String
-  OwnerId   Int
-  Address   String
-  Latitude  Float
-  Longitude Float
-  Description String?      
+  Name        String
+  OwnerId     Int
+  Address     String
+  Latitude    Float
+  Longitude   Float
+  Description String?
 
   // many-one relationship
   Owner CourtOwner @relation(fields: [OwnerId], references: [Id])
 
   //many-many or one-many relationship
-  Court Court[]
+  Court             Court[]
   CourtGroupService CourtGroupService[]
 
   //active condition
@@ -154,11 +154,11 @@ model Service {
 }
 
 model CourtGroupService {
-  Id          Int        @id @default(autoincrement())
+  Id          Int     @id @default(autoincrement())
   GroupId     Int
   ServiceId   Int
-  Price       Float?     // optional, if some services are paid
-  IsAvailable Boolean    @default(true)
+  Price       Float? // optional, if some services are paid
+  IsAvailable Boolean @default(true)
 
   CourtGroup CourtGroup @relation(fields: [GroupId], references: [Id])
   Service    Service    @relation(fields: [ServiceId], references: [Id])
@@ -168,16 +168,16 @@ model CourtGroupService {
 
 model CourtBooking {
   // key
-  Id            Int      @id @default(autoincrement())
+  Id Int @id @default(autoincrement())
 
   // value
   RecordDate    DateTime //time the entry was created
   BookStartTime DateTime //time booking start
   BookEndTime   DateTime //time booking end
 
-  BookedPrice   Float
-  TotalPrice Float
-  
+  BookedPrice Float
+  TotalPrice  Float
+
   Status BookingStatus @default(Pending)
 
   // many-one relationship
@@ -234,7 +234,7 @@ enum PaymentStatus {
   Refunded
 }
 
-enum BookingStatus{
+enum BookingStatus {
   Pending
   Confirmed
   Cancelled

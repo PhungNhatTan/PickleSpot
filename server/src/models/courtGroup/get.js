@@ -1,4 +1,4 @@
-import prisma from "../../config/prismaClient.js";
+import prisma from "../../prismaClient.js";
 
 const getCourtGroupById = async (id) => {
   return prisma.courtGroup.findUnique({
