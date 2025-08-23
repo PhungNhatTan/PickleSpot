@@ -15,8 +15,8 @@
   "scripts": {
     "server": "npm run dev --workspace server",
     "client": "npm run dev --workspace client",
+    "install-all": "npm install --workspaces",
     "build-client": "npm run build --prefix client",
-    "install-all": "npm install",
     "lint": "eslint . --config eslint.config.js",
     "lint:client": "npx eslint client --config eslint.config.js",
     "lint:server": "npx eslint server --config eslint.config.js",
@@ -25,7 +25,7 @@
     "start-no-build": "node -e \"process.env.NODE_ENV='production'; require('./server/index.js')\"",
     "prepare": "npx husky",
     "prisma:generate": "npm run generate --workspace server",
-    "postinstall": "npm run prisma:generate && npm run build-client"
+    "postinstall": "npm run install-all && npm run prisma:generate && npm run build-client"
   },
   "keywords": [],
   "author": "",
