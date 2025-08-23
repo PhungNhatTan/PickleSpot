@@ -1,8 +1,10 @@
 import create from './create.js';
 import get from './get.js';
-import getAll from './getAll.js'
+import getAll from './getAll.js';
 import update from './update.js';
 import remove from './delete.js';
+import searchCourts from './search.js';
+import getFeaturedCourts from './getFeatured.js';
 
 export default {
   create,
@@ -10,4 +12,6 @@ export default {
   getAll,
   update,
   remove,
+  searchCourts,
+  getFeaturedCourts,
 };

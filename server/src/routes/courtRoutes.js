@@ -1,9 +1,11 @@
 import { Router } from 'express';
-import { courtController } from '../controllers/court/index.js';
+import  court  from '../controllers/court/index.js';
 
 const router = Router();
 
-router.get('/:id', courtController.getCourtDetails);
-router.get('/', courtController.searchCourts);
+
+router.get('/featured', court.getFeatured);
+router.get('/:id', court.get);
+router.get('/', court.searchCourts);
 
 export default router;

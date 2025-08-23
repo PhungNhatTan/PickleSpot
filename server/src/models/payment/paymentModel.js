@@ -1,4 +1,4 @@
-import prisma from "../../config/prismaClient.js";
+import prisma from "../../prismaClient.js";
 
 export const paymentModel = {
     findById: (id) =>

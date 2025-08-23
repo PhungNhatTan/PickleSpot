@@ -1,4 +1,4 @@
-import prisma from "../../config/prismaClient.js";
+import prisma from "../../prismaClient.js";
 
 const updateCourt = async (id, data) => {
   return prisma.court.update({ where: { id }, data });

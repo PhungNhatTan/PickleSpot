@@ -1,25 +1,31 @@
-// client/src/App.jsx
-import { useState } from 'react'
-import { BrowserRouter, Routes, Route } from "react-router-dom"
-import SearchPage from "./pages/searchPage.jsx"
-import CourtDetailPage from "./pages/courtDetailPage.jsx"
-import './App.css'
-import TestAuth from './TestAuth'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import HomePage from './pages/homePage.jsx';
+import SearchPage from './pages/searchPage.jsx';
+import CourtDetailPage from './pages/courtDetailPage.jsx';
+import './App.css';
+import TestAuth from './TestAuth';
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
     <>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<SearchPage />} />
+          {/* Landing page */}
+          <Route path="/" element={<HomePage />} />
+
+          {/* Search results page */}
+          <Route path="/search" element={<SearchPage />} />
+
+          {/* Court detail page */}
           <Route path="/courts/:id" element={<CourtDetailPage />} />
+
+          {/* Redirect unknown url to home */}
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
+        <TestAuth />
       </BrowserRouter>
-      <TestAuth />
     </>
-  )
+  );
 }
 
-export default App
+export default App;

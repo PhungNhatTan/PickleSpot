@@ -13,8 +13,8 @@
     "server"
   ],
   "scripts": {
-    "server": "nodemon server/index.js",
-    "client": "npm run dev --prefix client",
+    "server": "npm run dev --workspace server",
+    "client": "npm run dev --workspace client",
     "build-client": "npm run build --prefix client",
     "install-all": "npm install",
     "lint": "eslint . --config eslint.config.js",
@@ -23,7 +23,8 @@
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "start": "npm run build-client && node -e \"process.env.NODE_ENV='production'; require('./server/index.js')\"",
     "start-no-build": "node -e \"process.env.NODE_ENV='production'; require('./server/index.js')\"",
-    "prepare": "npx husky"
+    "prepare": "npx husky",
+    "prisma:generate": "npm run prisma:generate --workspace server"
   },
   "keywords": [],
   "author": "",
@@ -40,5 +41,11 @@
     "husky": "^9.1.7",
     "lint-staged": "^16.1.5",
     "nodemon": "^3.1.10"
+  },
+  "dependencies": {
+    "axios": "^1.11.0",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
+    "react-router-dom": "^7.8.1"
   }
 }

@@ -8,5 +8,18 @@ export default defineConfig({
     proxy: {
       "/api": "http://localhost:5000",
     },
-  }
-})
+  },
+  resolve: {
+    alias: {
+      "@server": "/../server/src", // optional if you share code
+    },
+  },
+  optimizeDeps: {
+    exclude: ["@prisma/client"], // don’t prebundle prisma
+  },
+  build: {
+    rollupOptions: {
+      external: ["@prisma/client"], // don’t try to bundle prisma
+    },
+  },
+});
