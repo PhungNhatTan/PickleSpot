@@ -10,9 +10,10 @@ export default function HomePage() {
     const fetchCourts = async () => {
       try {
         const data = await getFeaturedCourts();
-        setCourts(data);
+        setCourts(data || []);
       } catch (err) {
         console.error('Error loading courts:', err);
+        setCourts([]);
       } finally {
         setLoading(false);
       }
@@ -48,9 +49,9 @@ export default function HomePage() {
       <div className="flex justify-center mt-8 flex-wrap gap-6 px-6">
         {loading ? (
           <p>Đang tải...</p>
-        ) : courts.length > 0 ? (
+        ) : courts.length ? (
           courts.map((courtGroup) => (
-            <CourtCard key={courtGroup.Id} courtGroup={courtGroup} />
+            <CourtCard key={courtGroup?.Id} courtGroup={courtGroup} />
           ))
         ) : (
           <p>Không tìm thấy sân nào</p>

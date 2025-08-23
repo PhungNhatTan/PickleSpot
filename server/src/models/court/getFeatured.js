@@ -4,14 +4,16 @@ export default async function getFeaturedCourts() {
   return prisma.courtGroup.findMany({
     take: 6,
     include: {
-      courts: {
+      Court: {
         take: 1,
         select: {
           Id: true,
           Name: true,
           Price: true,
-          OpenTime: true,
-          CloseTime: true,
+          Covered: true,
+          IsIndoor: true,
+          DurationUnit: true,
+          Capacity: true,
         },
       },
     },

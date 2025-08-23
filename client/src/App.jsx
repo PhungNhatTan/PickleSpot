@@ -1,7 +1,7 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import HomePage from './pages/homePage.jsx';
 import SearchPage from './pages/searchPage.jsx';
-import CourtDetailPage from './pages/CourtDetailPage.jsx';
+import CourtDetailPage from './pages/courtDetailPage.jsx';
 import './App.css';
 import TestAuth from './TestAuth';
 
@@ -18,11 +18,12 @@ function App() {
 
           {/* Court detail page */}
           <Route path="/courts/:id" element={<CourtDetailPage />} />
-        </Routes>
-      </BrowserRouter>
 
-      {/* Debug/Auth check */}
-      <TestAuth />
+          {/* Redirect unknown url to home */}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+        <TestAuth />
+      </BrowserRouter>
     </>
   );
 }
