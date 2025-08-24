@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "npx vite build",
-    "lint": "eslint .",
+    "build": "vite build",
+    "lint": "eslint . --config ../eslint.config.js",
     "preview": "vite preview"
   },
   "proxy": "http://localhost:5000",
