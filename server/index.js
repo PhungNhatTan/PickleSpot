@@ -15,9 +15,13 @@ if (process.env.NODE_ENV === "production") {
   const clientBuildPath = path.join(__dirname, "../client/dist"); // vite default build path
   app.use(express.static(clientBuildPath));
 
-  app.get("*", (_req, res) => {
+  app.get("*", (req, res, next) => {
+    if (req.originalUrl.startsWith("/assets/")) {
+      return next(); // let express.static handle assets
+    }
     res.sendFile(path.join(clientBuildPath, "index.html"));
   });
+
 }
 
 app.listen(PORT, () => {
