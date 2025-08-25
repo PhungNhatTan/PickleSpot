@@ -4,7 +4,7 @@ import AuthLayout from "./layouts/authLayout.jsx";
 
 import HomePage from "./pages/homePage.jsx";
 import SearchPage from "./pages/searchPage.jsx";
-import CourtDetailPage from "./pages/courtDetailPage.jsx";
+import CourtDetail from "./pages/courtDetail.jsx";
 // import LoginPage from "./pages/LoginPage.jsx";
 // import RegisterPage from "./pages/RegisterPage.jsx";
 
@@ -16,7 +16,7 @@ function App() {
         <Route element={<MainLayout />}>
           <Route path="/" element={<HomePage />} />
           <Route path="/search" element={<SearchPage />} />
-          <Route path="/courts/:id" element={<CourtDetailPage />} />
+          <Route path="/courts/:id" element={<CourtDetail />} />
         </Route>
 
         {/* Routes WITHOUT Navbar + Footer */}

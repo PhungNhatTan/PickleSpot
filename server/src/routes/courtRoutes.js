@@ -5,7 +5,10 @@ const router = Router();
 
 
 router.get('/featured', court.getFeatured);
-router.get('/:id', court.get);
 router.get('/', court.searchCourts);
+router.get('/:id(\\d+)', court.get);
+router.post('/', court.create);
+router.put('/:id(\\d+)', court.update);
+router.delete('/:id(\\d+)', court.remove);
 
 export default router;
