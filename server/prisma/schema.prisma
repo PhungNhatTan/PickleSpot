@@ -30,6 +30,7 @@ model Account {
   Booking     CourtBooking[]
   Payment     Payment[]
   CourtRating CourtRating[]
+  Notification Notification[]
 
   // active condition
   DisabledAt DateTime? //assign a date to disable
@@ -189,6 +190,7 @@ model CourtBooking {
 
   // many-many or one-many relationship
   Payment Payment[]
+  Notification Notification[]
 
   //active condition
   DisabledAt DateTime? //assign a date to disable
@@ -210,7 +212,29 @@ model Payment {
   AccountId Int
   Account   Account @relation(fields: [AccountId], references: [Id])
 
+  // one-many relationship
+
+
   //active condition
+  DisabledAt DateTime?
+}
+
+model Notification {
+  // key
+  Id Int @id @default(autoincrement())
+  
+  // value
+  Message String
+  Type NotificationType
+
+  // many-many relationship
+  AccountId Int
+  Account Account @relation(fields: [AccountId], references: [Id])
+
+  BookingId Int?
+  Booking CourtBooking? @relation(fields: [BookingId], references: [Id])
+
+  // active condition
   DisabledAt DateTime?
 }
 
@@ -239,4 +263,10 @@ enum BookingStatus {
   Confirmed
   Cancelled
   Completed
+}
+
+enum NotificationType {
+  Confirmation
+  Cancellation
+  Modification
 }

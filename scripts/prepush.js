@@ -59,7 +59,7 @@ import dotenv from 'dotenv';
     try {
       await fs.remove(tempDir);
     } catch (err) {
-      console.warn('⚠️ Could not remove temp folder, leaving it for manual cleanup:', tempDir);
+      console.warn('⚠️ Could not remove temp folder, leaving it for manual cleanup:' + tempDir, err);
     }
   } catch (err) {
     console.error('❌ Pre-push build simulation failed:', err);

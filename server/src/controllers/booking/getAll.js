@@ -1,10 +1,8 @@
-import prisma from '../../prismaClient.js';
+import bookingModel from '../../models/booking/index.js';
 
 const getAllBookings = async (req, res, next) => {
   try {
-    const bookings = await prisma.booking.findMany({
-      include: { court: true, payment: true },
-    });
+    const bookings = await bookingModel.getAll();
     res.json(bookings);
   } catch (err) {
     next(err);

@@ -13,7 +13,7 @@ const blacklist = new Map();
 
 function isBlacklisted(token) {
   const exp = blacklist.get(token);
-  if (!exp) return false;
+  if (!exp) {return false};
 
   const now = Math.floor(Date.now() / 1000);
   if (exp <= now) {
@@ -41,7 +41,7 @@ const decode = (token) => jwt.decode(token);
 
 function revokeUntilExpiry(token) {
   const decoded = decode(token);
-  if (!decoded?.exp) throw new Error("Invalid token");
+  if (!decoded?.exp) { throw new Error("Invalid token") };
   blacklist.set(token, decoded.exp);
 }
 

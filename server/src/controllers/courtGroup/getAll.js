@@ -1,10 +1,8 @@
-import prisma from '../../prismaClient.js';
+import courtGroupModel from '../../models/courtGroup/index.js';
 
 const getAllCourtGroups = async (req, res, next) => {
   try {
-    const groups = await prisma.courtGroup.findMany({
-      include: { courts: true },
-    });
+    const groups = await courtGroupModel.getAll();
     res.json(groups);
   } catch (err) {
     next(err);

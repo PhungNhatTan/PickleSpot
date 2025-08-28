@@ -1,14 +1,8 @@
-import prisma from '../../prismaClient.js';
+import courtModel from '../../models/court/index.js';
 
 const getAllCourts = async (req, res, next) => {
   try {
-    const courts = await prisma.court.findMany({
-      include: {
-        photo: true,
-        type: true,
-        courtRating: true,
-      },
-    });
+    const courts = await courtModel.getAll();
     res.json(courts);
   } catch (err) {
     next(err);

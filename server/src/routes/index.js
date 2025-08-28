@@ -4,6 +4,7 @@ import healthRoutes from "./healthRoutes.js";
 import authRoutes from "./authRoutes.js";
 import courtRoutes from "./courtRoutes.js";
 import bookingRoutes from "./bookingRoutes.js";
+import notificationRoutes from "./notificationRoutes.js"
 
 const router = express.Router();
 
@@ -14,5 +15,6 @@ router.use("/api/auth", authRoutes);
 // domain routes
 router.use("/api/courts", courtRoutes);
 router.use("/api/bookings", bookingRoutes);
+router.use("/api/notifications", notificationRoutes);
 
 export default router;
