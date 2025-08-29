@@ -1,6 +1,6 @@
 import courtGroupModel from '../../models/courtGroup/index.js';
 
-const deleteNotificationGroup = async (req, res, next) => {
+const deleteNotification = async (req, res, next) => {
   try {
     const { id } = req.params;
     await courtGroupModel.remove(Number(id));
@@ -10,4 +10,4 @@ const deleteNotificationGroup = async (req, res, next) => {
   }
 };
 
-export default deleteNotificationGroup;
+export default deleteNotification;

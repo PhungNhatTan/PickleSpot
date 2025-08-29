@@ -1,4 +1,4 @@
-import prisma from '../generated/prisma/index.js';
+import prisma from '../../generated/prisma/index.js';
 
 const hasConflict = async (courtId, startTime, endTime) => {
   const conflict = await prisma.courtBooking.findFirst({
